@@ -1,0 +1,38 @@
+MASTER
+
+wget https://apt.puppetlabs.com/puppetlabs-release-pc1-xenial.deb
+dpkg -i puppetlabs-release-pc1-xenial.deb
+sudo apt-get update
+sudo apt-get install puppetmaster-passenger
+sudo service apache2 stop
+sudo vi /etc/puppet/puppet.conf
+[main]
+dns_alt_names=puppet,puppet.example.com
+
+AGENT
+
+sudo apt-get update
+sudo apt-get install puppet
+sudo vi /etc/hosts
+192.168.0.91 puppet
+sudo vi /etc/puppet/puppet.conf
+[main]
+server=puppet.example.com
+sudo service puppet start
+puppet agent -t
+
+
+MASTER
+
+sudo puppet cert list
+sudo puppet cert sign web(host name)
+sudo vi /etc/puppet/manifests/site.pp
+file {'/tmp/example-ip':                                            # resource type file and filename
+  ensure  => present,                                               # make sure it exists
+  mode    => 0644,                                                  # file permissions
+  content => "Here is my Public IP Address: ${ipaddress_eth0}.\n",  # note the ipaddress_eth0 fact
+}
+
+AGENT
+
+puppet agent --test
