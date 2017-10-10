@@ -8,6 +8,7 @@ sudo service apache2 stop
 sudo vi /etc/puppet/puppet.conf
 [main]
 dns_alt_names=puppet,puppet.example.com
+sudo service apache2 start
 
 AGENT
 
